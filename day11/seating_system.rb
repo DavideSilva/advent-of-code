@@ -20,6 +20,20 @@ def count_neighbors(input, row, column)
   count
 end
 
+def in_bounds?(input, row, column, x, y)
+  size = input.size
+
+  row + x >= 0 && row + x < size && column + y >= 0 && column + y < size
+end
+
+def count_seats(input, row, column)
+  directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
+
+  directions.select do |x, y|
+    in_bounds?(input, row, column, x, y) && input[row + x][column + y] == '#'
+  end.size
+end
+
 def part1(input = INPUT)
   new_input = input.dup.map(&:dup)
   previous = 0
@@ -28,7 +42,7 @@ def part1(input = INPUT)
     while i < input.size
       j = 0
       while j < input.size
-        occupied = count_neighbors(input, i, j)
+        occupied = count_seats(input, i, j)
         new_input[i][j] = '#' if occupied.zero? && input[i][j] == 'L'
         new_input[i][j] = 'L' if occupied >= 4 && input[i][j] == '#'
         j += 1
