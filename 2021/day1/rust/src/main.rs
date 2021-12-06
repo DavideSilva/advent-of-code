@@ -31,5 +31,13 @@ fn measure_increase(depths: &Vec<i32>) -> i32 {
 fn rolling_window(depths: &Vec<i32>) -> i32 {
     let sums_of_depths: Vec<i32> = depths.windows(3).map(|d| d.to_vec().iter().sum()).collect();
 
+    // Alternative solution
+    /*
+     let sums_of_depths: Vec<i32> = depths.windows(3).fold(Vec::new(), |mut sum,value| {
+        sum.push(value.to_vec().iter().sum());
+        sum
+    });
+    */
+
     return measure_increase(&sums_of_depths);
 }
