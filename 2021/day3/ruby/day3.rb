@@ -1,23 +1,15 @@
 INPUT = File.read(ARGV[0]).split("\n")
 
 def calculate_frequencies(input)
-  most_common_bit = []
-  input.map do |line|
-    line.chars.each_with_index do |c, index|
-      most_common_bit[index] = {zero: 0, one: 0} if most_common_bit[index].nil?
-
-      c == "0" ? most_common_bit[index][:zero] += 1 : most_common_bit[index][:one] += 1
-    end
-  end
-  most_common_bit
+  input.map(&:chars).transpose.map(&:tally)
 end
 
 def calculate_oxygen_rating(input, frequencies, bit)
   if (input.size == 1)
     return input.first
   else
-    drop_bit = frequencies[bit][:zero] > frequencies[bit][:one] ? "0" : "1"
-    drop_bit = "1" if frequencies[bit][:zero] == frequencies[bit][:one]
+    drop_bit = frequencies[bit]["0"] > frequencies[bit]["1"] ? "0" : "1"
+    drop_bit = "1" if frequencies[bit]["0"] == frequencies[bit]["1"]
 
     new_input = input.sort.filter do |line|
       line[bit] == drop_bit
@@ -34,8 +26,8 @@ def calculate_co2_rating(input, frequencies, bit)
   if (input.size == 1)
     return input.first
   else
-    drop_bit = frequencies[bit][:zero] > frequencies[bit][:one] ? "1" : "0"
-    drop_bit = "0" if frequencies[bit][:zero] == frequencies[bit][:one]
+    drop_bit = frequencies[bit]["0"] > frequencies[bit]["1"] ? "1" : "0"
+    drop_bit = "0" if frequencies[bit]["0"] == frequencies[bit]["1"]
 
     new_input = input.sort.filter do |line|
       line[bit] == drop_bit
@@ -49,13 +41,7 @@ def calculate_co2_rating(input, frequencies, bit)
 end
 
 def part_1(input)
-  gamma = ""
-  epsilon = ""
-
-  calculate_frequencies(input).each do |m|
-    m[:zero] > m[:one] ? gamma += '0' : gamma += '1'
-  end
-
+  gamma = calculate_frequencies(input).map do |f| f.max_by do |k,v| v end end.transpose.first.join
   epsilon = gamma.chars.map(&:to_i).map do |i| i ^= 1 end.join
 
   puts "Gamma: #{gamma} - #{gamma.to_i(2)}"
