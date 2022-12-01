@@ -1,5 +1,4 @@
-use std::env;
-use std::fs;
+use std::{env, fs};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -24,12 +23,12 @@ fn part1(crabs: &Vec<i32>) -> i32 {
         .collect::<Vec<i32>>()
         .iter()
         .map(|i| {
-            let c = crabs
+            let c: i32 = crabs
                 .iter()
                 .map(|c| (i - c).abs())
                 .collect::<Vec<i32>>()
                 .into_iter()
-                .sum::<i32>();
+                .sum();
             c
         })
         .collect::<Vec<i32>>()
